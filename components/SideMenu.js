@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -14,44 +14,7 @@ import { firebase } from '../config';
  * the list format should be [{text, onPress}, ...]
  * @returns 
  */
-const SideBarComponent = ({ navigation, username, btnList, onOpen, onClose }) => {
-
-  const auth = firebase.auth();
-  const firestore = firebase.firestore();
-  /*  */
-  const [userName, setUserName] = useState('');
-
-  // useEffect(() => {
-  //   const fetchUserInfo = async () => {
-  //     try {
-  //       const user = auth.currentUser;
-  //       if (user) {
-  //         const userDoc = await firestore.collection('users').doc(user.uid).get();
-  //         const userData = userDoc.data();
-  //         if (userData) {
-  //           const { firstName, lastName } = userData;
-  //           setUserName(`${firstName} ${lastName}`);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user information:', error.message);
-  //     }
-  //   };
-
-  //   fetchUserInfo();
-  // }, []);
-
-  // const handleLogout = async () => {
-  //   try {
-  //     await auth.signOut();
-  //     navigation.replace('Login');
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // };
-  /*  */
-
-
+const SideBarComponent = ({ navigation, username, btnList=[], onOpen, onClose, style }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   // Animated value for controlling the left position
@@ -84,15 +47,15 @@ const SideBarComponent = ({ navigation, username, btnList, onOpen, onClose }) =>
   });
 
   return (
-    <View >
+    <View style={style}>
       <TouchableOpacity onPress={toggleVisibility} style={styles.button}>
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{isVisible ? '☰' : '❌'}</Text>
       </TouchableOpacity>
 
-      <Animated.View style={[styles.animatedView, animatedStyles]}>
+      <Animated.View style={[styles.animatedView, styles.cardShadow,  animatedStyles]}>
         <Image
           style={styles.logo}
-          source={require('../assets/genDrawLogo.jpeg')}
+          source={require('../assets/genDrawLogo.png')}
         />
         <Text style={styles.welcomeText}>Hi, {username} 👋</Text>
         {
@@ -102,19 +65,6 @@ const SideBarComponent = ({ navigation, username, btnList, onOpen, onClose }) =>
             </TouchableOpacity>
           ))
         }
-        {/* <TouchableOpacity style={styles.menuButton} onPress={onclear}>
-          <Text>   Clear   </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={onsave}>
-          <Text>   Save   </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={()=>{alert('comming soon!')}}>
-          <Text>AI Sketch</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: '#e74c3c', marginTop: 100 }] } onPress={handleLogout}>
-          <Text>Logout</Text>
-        </TouchableOpacity> */}
-        
       </Animated.View>
     </View>
   );
@@ -163,7 +113,15 @@ const styles = StyleSheet.create({
 
   btnText: {
     textAlign:'center'
-  }
+  }, 
+  
+  cardShadow: {
+    shadowOffset: { width: -12, height: 14 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 50,
+    shadowColor: '#171717'
+},
 });
 
 export default SideBarComponent;
